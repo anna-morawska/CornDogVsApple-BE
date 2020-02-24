@@ -1,17 +1,26 @@
-from flask import Flask, jsonify, request
+import werkzeug
+werkzeug.cached_property = werkzeug.utils.cached_property
+from flask import Flask 
+from flask_restplus import Api, Resource, fields
+
 app = Flask(__name__)
+api = Api(app)
 
-@app.route('/', methods=['GET', 'POST'])
-def hello():
-    if request.method == 'POST':
-        request_payload = request.get_json()
-        return jsonify({'request_payload': request_payload}), 201
-    else:
-        return jsonify({'data': 'Hello World'})
+a_contributor = api.model('contributor', {'name' : fields.String('contributor name')})
 
-@app.route('/multiply/<int:num>', methods=['GET'])
-def multiply(num):
-   return jsonify({'data': num*10})
+contributors = []
+authors = [{'name' : 'Anna Morawska'}, {'name' : 'Kamil Kulik'}]
+contributors.extend(authors)
 
-if __name__ == "__main__":
+@api.route('/contributor')
+class Contributor(Resource):
+    def get(self):
+        return contributors
+
+    @api.expect(a_contributor)
+    def post(self):
+        contributors.append(api.payload)
+        return {'result' : 'Contributor added'}, 201 
+
+if __name__ == '__main__':
     app.run(debug=True)
