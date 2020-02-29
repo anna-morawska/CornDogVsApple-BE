@@ -10,6 +10,8 @@ pylint = "*"
 flask = "==1.1.1"
 gunicorn = "*"
 flask-restplus = "*"
+google-cloud-vision = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.7"
