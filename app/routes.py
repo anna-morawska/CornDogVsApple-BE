@@ -17,7 +17,7 @@ class Upload(Resource):
         is_image_valid = my_utils.validate_image(uploaded_file)
 
         if is_image_valid[0]:
-            response = classify_image.classify_image(uploaded_file)
+            response = classify_image.classify_image(uploaded_file.read())
             return {'data': response}, 201
         else:
              return {'message': is_image_valid[1]}, 400
