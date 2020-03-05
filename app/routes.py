@@ -1,6 +1,5 @@
 from flask_restplus import Resource
 import os
-from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from app import api, app, classify_image, my_utils
 
@@ -18,10 +17,7 @@ class Upload(Resource):
         is_image_valid = my_utils.validate_image(uploaded_file)
 
         if is_image_valid[0]:
-            image_save_path = os.path.join(app.config['IMAGE_UPLOADS'], secure_filename(uploaded_file.filename))
-            uploaded_file.save(image_save_path)
-            response = classify_image.classify_image(image_save_path)
-
+            response = classify_image.classify_image(uploaded_file)
             return {'data': response}, 201
         else:
              return {'message': is_image_valid[1]}, 400
