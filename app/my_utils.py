@@ -2,13 +2,14 @@ from functools import wraps
 from flask import request, abort
 from app import app
 
+
 def limit_content_length(max_length):
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
             content_length = request.content_length
             if content_length is not None and content_length > max_length:
-               return {'message': 'Maximum size of file upload is 4MB.'}, 413
+                abort(413, 'Maximum size of file upload is 4MB.')
             return f(*args, **kwargs)
         return wrapper
     return decorator
